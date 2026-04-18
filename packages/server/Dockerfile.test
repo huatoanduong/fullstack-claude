@@ -1,0 +1,8 @@
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json yarn.lock* ./
+COPY packages/server/package.json ./packages/server/
+RUN yarn install --frozen-lockfile --production=false
+COPY packages/server ./packages/server
+WORKDIR /app/packages/server
+CMD ["yarn", "test"]

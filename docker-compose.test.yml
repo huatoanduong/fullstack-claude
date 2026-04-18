@@ -1,0 +1,28 @@
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: campaign_test
+    ports:
+      - '5433:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U test -d campaign_test']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  server-test:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile.test
+    environment:
+      DATABASE_URL: postgresql://test:test@postgres-test:5432/campaign_test
+      JWT_SECRET: test-jwt-secret
+      REFRESH_SECRET: test-refresh-secret
+      NODE_ENV: test
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    command: ['yarn', 'test']

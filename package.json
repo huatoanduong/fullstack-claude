@@ -1,0 +1,10 @@
+{
+  "name": "campaign-manager",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev": "yarn workspaces run dev",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspaces run test"
+  }
+}
